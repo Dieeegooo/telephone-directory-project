@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Validation\Rule;
 use App\Models\Telephone;
 use Illuminate\Http\Request;
 
@@ -43,7 +43,10 @@ class TelephoneController extends Controller
     {
         $validated = $request->validate([
             'contact_id' => ['sometimes','required', 'exists:contacts,id'],
-            'number' => ['sometimes','required', 'unique:telephones', 'string', 'regex:/^\+?[0-9\s\-\(\)]{7,20}$/']
+            'number' => ['sometimes','required', 
+             'string', 'regex:/^\+?[0-9\s\-\(\)]{7,20}$/',
+             Rule::unique('telephones')->ignore($telephone->id),]
+
         ]);
         $telephone->update($validated);
         return response()->json($telephone);

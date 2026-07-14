@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Validation\Rule;
 use App\Models\Mail;
 use Illuminate\Http\Request;
 
@@ -43,10 +43,11 @@ class MailController extends Controller
     {
         $validated = $request->validate([
             'contact_id'=>['sometimes','required','exists:contacts,id'],
-            'mail'=>['sometimes','required','unique:mails','email','max:255']                     
+            'mail'=>['sometimes','required','email','max:255',
+            Rule::unique('mails')->ignore($mail->id),]                     
         ]);
         $mail->update($validated);
-        return response()->json($mail,204);
+        return response()->json($mail);
     }
 
     /**
