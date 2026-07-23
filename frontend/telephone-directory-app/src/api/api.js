@@ -1,4 +1,5 @@
-const BASE_URL = "http://127.0.0.1:8000/api";
+const BASE_URL = import.meta.env.VITE_API_URL;
+
 
 export const apiRequest = async (url, method, data = null) => {
     const token = localStorage.getItem("token");
