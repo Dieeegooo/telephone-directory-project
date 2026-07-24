@@ -28,8 +28,8 @@ gestire i propri contatti con relativi numeri di telefono ed email.
 
 ```
 .
-├── backend/     # API Laravel (adatta il nome alla tua cartella reale)
-└── frontend/    # SPA React (adatta il nome alla tua cartella reale)
+├── telephone-directory-backend/app/   # API Laravel (root con artisan)
+└── frontend/telephone-directory-app/  # SPA React
 ```
 
 ---
@@ -46,7 +46,7 @@ Servono due terminali: uno per il backend, uno per il frontend.
 ### 1) Backend (Laravel)
 
 ```bash
-cd backend            # la cartella dell'app Laravel (dove c'è artisan)
+cd telephone-directory-backend/app    # la cartella dell'app Laravel (dove c'è artisan)
 composer install
 cp .env.example .env
 php artisan key:generate
@@ -58,18 +58,22 @@ php artisan serve                # avvia su http://127.0.0.1:8000
 > Il progetto usa **SQLite** di default: non serve installare MySQL.
 > Assicurati che nel `.env` ci sia `DB_CONNECTION=sqlite`.
 
-**CORS:** il frontend gira su un'altra porta, quindi il backend deve
-autorizzarne l'origine. In `config/cors.php` verifica che gli origini permessi
-includano l'URL del frontend (default Vite: `http://localhost:5173`):
+> **In alternativa**, nella cartella `telephone-directory-backend/` è presente
+> un `docker-compose.yml` che avvia backend + MySQL + phpMyAdmin
+> (`docker compose up`). In quel caso il `.env` va impostato con
+> `DB_CONNECTION=mysql` e le credenziali del container (vedi `docker-compose.yml`).
 
-```php
-'allowed_origins' => ['http://localhost:5173'],
-```
+**CORS:** non è presente un `config/cors.php` nel progetto, quindi Laravel usa
+il default del framework che permette tutte le origini
+(`allowed_origins => ['*']`) — in locale funziona senza configurare nulla. Se
+in futuro vuoi restringere le origini permesse, pubblica il file con
+`php artisan config:publish cors` e imposta l'URL del frontend
+(default Vite: `http://localhost:5173`).
 
 ### 2) Frontend (React)
 
 ```bash
-cd frontend
+cd frontend/telephone-directory-app
 npm install
 ```
 
