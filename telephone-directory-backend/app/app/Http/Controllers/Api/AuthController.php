@@ -16,6 +16,12 @@ class AuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8'],
+        ], [            
+            'email.unique' => 'Questa email è già registrata. Prova a fare il login.',
+
+            'email.required' => 'Il campo email è obbligatorio.',
+            'email.email' => 'Inserisci un indirizzo email valido.',
+            'password.min' => 'La password deve contenere almeno 8 caratteri.',
         ]);
 
         $user = User::create([
@@ -23,6 +29,7 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
 
         $token = $user->createToken('api-token')->plainTextToken;
 
