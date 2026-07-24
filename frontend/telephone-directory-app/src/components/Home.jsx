@@ -13,6 +13,7 @@ function Home() {
   const [listError, setListError] = useState(""); // errore generico (es. eliminazione)
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
+  const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const { logout } = useAuth();
 
@@ -73,9 +74,25 @@ function Home() {
       <div className="alert alert-danger">Errore nel caricamento dei contatti</div>
     );
 
+  const filteredContacts = contacts.filter((c) => {
+    const query = search.trim().toLowerCase();
+    if (!query) return true;
+    return `${c.name} ${c.surname}`.toLowerCase().includes(query);
+  });
+
   return (
     <div>
       <h1 className="h3 mb-4">Rubrica</h1>
+
+      <div className="mb-4">
+        <input
+          type="search"
+          className="form-control"
+          placeholder="Cerca contatto..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
 
       <div className="card shadow-sm mb-4">
         <div className="card-body">
@@ -125,9 +142,11 @@ function Home() {
 
       {contacts.length === 0 ? (
         <p className="text-muted">Nessun contatto in rubrica.</p>
+      ) : filteredContacts.length === 0 ? (
+        <p className="text-muted">Nessun contatto trovato.</p>
       ) : (
         <ul className="list-group shadow-sm">
-          {contacts.map((c) => (
+          {filteredContacts.map((c) => (
             <li
               key={c.id}
               className="list-group-item d-flex justify-content-between align-items-center"
