@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { getContacts, createContact, deleteContact } from "../api/contacts";
 import { extractError, extractFieldErrors } from "../api/api";
 import { useAuth } from "../context/AuthContext";
+import Avatar from "./Avatar";
 
 function Home() {
   const [contacts, setContacts] = useState([]);
@@ -131,9 +132,12 @@ function Home() {
               key={c.id}
               className="list-group-item d-flex justify-content-between align-items-center"
             >
-              <Link to={`/contacts/${c.id}`} className="text-decoration-none">
-                {c.name} {c.surname}
-              </Link>
+              <div className="d-flex align-items-center gap-2">
+                <Avatar name={c.name} size={32} />
+                <Link to={`/contacts/${c.id}`} className="text-decoration-none">
+                  {c.name} {c.surname}
+                </Link>
+              </div>
               <button
                 className="btn btn-outline-danger btn-sm"
                 onClick={() => handleDelete(c.id)}

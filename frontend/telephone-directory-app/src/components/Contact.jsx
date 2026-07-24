@@ -10,6 +10,7 @@ import {
   deleteMail,
 } from "../api/contacts";
 import { extractFieldErrors } from "../api/api";
+import Avatar from "./Avatar";
 
 // Validazioni lato client (stesse regole del backend), così blocchiamo
 // gli input palesemente sbagliati prima ancora di chiamare l'API.
@@ -158,9 +159,12 @@ function Contact() {
         ← Torna alla rubrica
       </Link>
 
-      <h1 className="h3 mb-4">
-        {contact.name} {contact.surname}
-      </h1>
+      <div className="d-flex align-items-center gap-3 mb-4">
+        <Avatar name={contact.name} size={64} />
+        <h1 className="h3 mb-0">
+          {contact.name} {contact.surname}
+        </h1>
+      </div>
 
       <div className="card shadow-sm mb-4">
         <div className="card-body">
