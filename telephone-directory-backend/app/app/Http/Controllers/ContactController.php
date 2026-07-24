@@ -10,9 +10,9 @@ class ContactController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Contact::all();
+        return Contact::where('user_id', $request->user()->id)->get();
     }
 
     /**
@@ -22,8 +22,9 @@ class ContactController extends Controller
     {
         $validated = $request->validate([
             'name'=>['required','string','max:255'],
-            'surname'=>['nullable','string'],       
+            'surname'=>['nullable','string'],
         ]);
+       $validated['user_id'] = $request->user()->id;
        $contact = Contact::create($validated);
        return response()->json($contact, 201);
     }
@@ -31,8 +32,11 @@ class ContactController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Contact $contact)
+    public function show(Request $request, Contact $contact)
     {
+        if ($contact->user_id !== $request->user()->id) {
+            abort(403);
+        }
         return $contact->load(['telephones','mails']);
     }
 
@@ -41,6 +45,9 @@ class ContactController extends Controller
      */
     public function update(Request $request, Contact $contact)
     {
+        if ($contact->user_id !== $request->user()->id) {
+            abort(403);
+        }
         $validated = $request->validate([
             'name'=>['sometimes','required','string','max:255'],
             'surname' => ['nullable','string'],
@@ -52,8 +59,11 @@ class ContactController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Contact $contact)
+    public function destroy(Request $request, Contact $contact)
     {
+        if ($contact->user_id !== $request->user()->id) {
+            abort(403);
+        }
         $contact->delete();
         return response()->json(null,204);
     }
